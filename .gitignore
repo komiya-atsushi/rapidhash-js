@@ -3,4 +3,5 @@ node_modules/
 build/
 coverage/
 
-rapidhash-c/generate_test_vector
+rapidhash-c/generate_test_vector_fast
+rapidhash-c/generate_test_vector_protected
