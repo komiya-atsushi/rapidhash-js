@@ -1,14 +1,23 @@
-import {rapidhash} from '../src/rapidhash';
+import {rapidhash, rapidhash_fast, rapidhash_protected} from '../src/rapidhash';
 import * as testVectorsFast from '../rapidhash-c/test_vector_fast';
+import * as testVectorsProtected from '../rapidhash-c/test_vector_protected';
 
 describe('rapidhash_fast', () => {
   const {testVectors1, testVectors2, longMessage} = testVectorsFast;
 
   describe('Hash short messages', () => {
     test.each(testVectors1)(
-      'message = "%s", seed = %s',
+      'rapidhash("%s", {seed: %s, rapidMumBehaviour: "fast"}) = %s',
       (message: string, seed: bigint, expected: bigint) => {
-        const result = rapidhash(message, {seed});
+        const result = rapidhash(message, {seed, rapidMumBehaviour: 'fast'});
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors1)(
+      'rapidhash_fast("%s", {seed: %s}) = %s',
+      (message: string, seed: bigint, expected: bigint) => {
+        const result = rapidhash_fast(message, {seed});
         expect(result).toEqual(expected);
       }
     );
@@ -18,7 +27,48 @@ describe('rapidhash_fast', () => {
     test.each(testVectors2)(
       'length = %d, seed = %s',
       (length: number, seed: bigint, expected: bigint) => {
-        const result = rapidhash(longMessage.slice(0, length), {seed});
+        const result = rapidhash(longMessage.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'fast',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+  });
+});
+
+describe('rapidhash_protected', () => {
+  const {testVectors1, testVectors2, longMessage} = testVectorsProtected;
+
+  describe('Hash short messages', () => {
+    test.each(testVectors1)(
+      'rapidhash("%s", {seed: %s, rapidMumBehaviour: "protected"}) = %s',
+      (message: string, seed: bigint, expected: bigint) => {
+        const result = rapidhash(message, {
+          seed,
+          rapidMumBehaviour: 'protected',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors1)(
+      'rapidhash_protected("%s", {seed: %s}) = %s',
+      (message: string, seed: bigint, expected: bigint) => {
+        const result = rapidhash_protected(message, {seed});
+        expect(result).toEqual(expected);
+      }
+    );
+  });
+
+  describe('Hash long messages', () => {
+    test.each(testVectors2)(
+      'length = %d, seed = %s',
+      (length: number, seed: bigint, expected: bigint) => {
+        const result = rapidhash(longMessage.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'protected',
+        });
         expect(result).toEqual(expected);
       }
     );

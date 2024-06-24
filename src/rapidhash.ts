@@ -201,3 +201,35 @@ export function rapidhash(
     rapidMumImplementations[options.rapidMumBehaviour]
   );
 }
+
+export function rapidhash_fast(
+  message: string,
+  options: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>> = {
+    seed: RAPID_SEED,
+  }
+): bigint {
+  const seed = options.seed ?? RAPID_SEED;
+
+  return rapidhash_internal(
+    toDataViewFromString(message),
+    seed,
+    rapid_secret,
+    rapid_mum_fast
+  );
+}
+
+export function rapidhash_protected(
+  message: string,
+  options: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>> = {
+    seed: RAPID_SEED,
+  }
+): bigint {
+  const seed = options.seed ?? RAPID_SEED;
+
+  return rapidhash_internal(
+    toDataViewFromString(message),
+    seed,
+    rapid_secret,
+    rapid_mum_protected
+  );
+}
