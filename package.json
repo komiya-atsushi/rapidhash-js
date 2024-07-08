@@ -16,8 +16,18 @@
     "posttest": "npm run lint"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "KOMIYA Atsushi",
+    "url": "https://github.com/komiya-atsushi"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komiya-atsushi/rapidhash-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/komiya-atsushi/rapidhash-js/issues"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "20.11.5",
