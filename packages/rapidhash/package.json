@@ -14,5 +14,13 @@
   },
   "bugs": {
     "url": "https://github.com/komiya-atsushi/rapidhash-js/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "jest --verbose --coverage",
+    "compile": "tsc",
+    "pretest": "npm run compile"
   }
 }

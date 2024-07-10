@@ -1,6 +1,6 @@
 import {rapidhash, rapidhash_fast, rapidhash_protected} from '../src/rapidhash';
-import * as testVectorsFast from '../rapidhash-c/test_vector_fast';
-import * as testVectorsProtected from '../rapidhash-c/test_vector_protected';
+import * as testVectorsFast from './test_vector_fast';
+import * as testVectorsProtected from './test_vector_protected';
 
 describe('rapidhash_fast', () => {
   const {testVectors1, testVectors2, longMessage} = testVectorsFast;

@@ -7,13 +7,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "jest --verbose --coverage",
     "lint": "gts lint",
     "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "fix": "gts fix"
   },
   "keywords": [],
   "author": {
