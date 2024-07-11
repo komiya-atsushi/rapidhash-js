@@ -3,5 +3,6 @@ node_modules/
 build/
 coverage/
 
-rapidhash-c/generate_test_vector_fast
-rapidhash-c/generate_test_vector_protected
+rapidhash-c/
+!rapidhash-c/Makefile
+!rapidhash-c/generate_test_vector.c
