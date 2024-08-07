@@ -7,6 +7,7 @@
     "node": ">=18"
   },
   "scripts": {
+    "test": "jest --verbose --coverage",
     "lint": "gts lint",
     "clean": "gts clean",
     "fix": "gts fix"
