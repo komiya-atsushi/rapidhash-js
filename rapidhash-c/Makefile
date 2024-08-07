@@ -1,5 +1,7 @@
 CC = gcc
 
+RAPIDHASH_TAG = rapidhash_v1.0
+
 TEST_VECTOR_TS = \
 	test_vector_fast.ts \
 	test_vector_protected.ts
@@ -11,15 +13,20 @@ all: $(TARGETS)
 .PHONY: all clean clean-target
 
 clean:
-	rm test_vector_{fast,protected} test_vector_{fast,protected}.ts
+	rm -f test_vector_{fast,protected} test_vector_{fast,protected}.ts
 
 clean-target:
-	rm $(TARGETS)
+	rm -f $(TARGETS)
 
-clean-all: clean clean-target
+clean-source:
+	rm -rf rapidhash
+
+clean-all: clean clean-target clean-source
 
 rapidhash/rapidhash.h:
-	git submodule update --init
+	git clone --depth 1 \
+		--branch $(RAPIDHASH_TAG) \
+		https://github.com/Nicoshev/rapidhash.git
 
 test_vector_fast: generate_test_vector.c rapidhash/rapidhash.h
 	$(CC) generate_test_vector.c -o $@
