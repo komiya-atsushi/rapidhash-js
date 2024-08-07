@@ -14,6 +14,8 @@ int main(void) {
       "a",
       "AB",
       "123",
+      "¶", // 2 bytes in UTF-8
+      "あ", // 3 bytes in UTF-8
       "Hello, world.",
       "こんにちは、世界。",
   };
