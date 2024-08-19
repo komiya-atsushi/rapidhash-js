@@ -173,7 +173,13 @@ interface RapidhashOptions {
 
 const textEncoder = new TextEncoder();
 
-function toDataViewFromString(message: string): DataView {
+function toDataView(message: string | Uint8Array | DataView): DataView {
+  if (message instanceof DataView) {
+    return message;
+  }
+  if (message instanceof Uint8Array) {
+    return new DataView(message.buffer, message.byteOffset, message.byteLength);
+  }
   const utf8bytes = textEncoder.encode(message);
   return new DataView(
     utf8bytes.buffer,
@@ -195,7 +201,7 @@ export function rapidhash(
   };
 
   return rapidhash_internal(
-    toDataViewFromString(message),
+    toDataView(message),
     options.seed,
     rapid_secret,
     rapidMumImplementations[options.rapidMumBehaviour]
@@ -211,7 +217,7 @@ export function rapidhash_fast(
   const seed = options.seed ?? RAPID_SEED;
 
   return rapidhash_internal(
-    toDataViewFromString(message),
+    toDataView(message),
     seed,
     rapid_secret,
     rapid_mum_fast
@@ -227,7 +233,7 @@ export function rapidhash_protected(
   const seed = options.seed ?? RAPID_SEED;
 
   return rapidhash_internal(
-    toDataViewFromString(message),
+    toDataView(message),
     seed,
     rapid_secret,
     rapid_mum_protected
