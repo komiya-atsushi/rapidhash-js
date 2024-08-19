@@ -2,7 +2,10 @@
   "name": "rapidhash",
   "version": "0.0.1",
   "description": "A TypeScript implementation of Rapidhash",
-  "keywords": ["hash", "rapidhash"],
+  "keywords": [
+    "hash",
+    "rapidhash"
+  ],
   "author": {
     "name": "KOMIYA Atsushi",
     "url": "https://github.com/komiya-atsushi"
@@ -19,8 +22,11 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "jest --verbose --coverage",
     "compile": "tsc",
     "pretest": "npm run compile"
-  }
+  },
+  "main": "build/src/index.js",
+  "files": [
+    "build/src/**/*.{js,d.ts}"
+  ]
 }
