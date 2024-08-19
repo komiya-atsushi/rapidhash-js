@@ -171,6 +171,38 @@ interface RapidhashOptions {
   rapidMumBehaviour: RapidMumBehaviour;
 }
 
+function isBigUint64(value: bigint): boolean {
+  return value >= 0n && value <= 0xffff_ffff_ffff_ffffn;
+}
+
+function validateOptions(
+  options: Partial<RapidhashOptions> | undefined
+): RapidhashOptions {
+  const result: RapidhashOptions = {
+    seed: RAPID_SEED,
+    rapidMumBehaviour: defaultRapidMumBehaviour,
+  };
+
+  if (options === undefined) {
+    return result;
+  }
+
+  if (options.seed !== undefined) {
+    if (!isBigUint64(options.seed)) {
+      throw new Error(
+        `seed must be a 64-bit unsigned bigint value: ${options.seed}`
+      );
+    }
+    result.seed = options.seed;
+  }
+
+  if (options.rapidMumBehaviour !== undefined) {
+    result.rapidMumBehaviour = options.rapidMumBehaviour;
+  }
+
+  return result;
+}
+
 const textEncoder = new TextEncoder();
 
 function toDataView(message: string | Uint8Array | DataView): DataView {
@@ -189,32 +221,24 @@ function toDataView(message: string | Uint8Array | DataView): DataView {
 }
 
 export function rapidhash(
-  message: string,
-  options_: Partial<RapidhashOptions> = {
-    seed: RAPID_SEED,
-    rapidMumBehaviour: defaultRapidMumBehaviour,
-  }
+  message: string | Uint8Array | DataView,
+  options?: Partial<RapidhashOptions>
 ): bigint {
-  const options = {
-    seed: options_.seed ?? RAPID_SEED,
-    rapidMumBehaviour: options_.rapidMumBehaviour ?? defaultRapidMumBehaviour,
-  };
+  const {seed, rapidMumBehaviour} = validateOptions(options);
 
   return rapidhash_internal(
     toDataView(message),
-    options.seed,
+    seed,
     rapid_secret,
-    rapidMumImplementations[options.rapidMumBehaviour]
+    rapidMumImplementations[rapidMumBehaviour]
   );
 }
 
 export function rapidhash_fast(
-  message: string,
-  options: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>> = {
-    seed: RAPID_SEED,
-  }
+  message: string | Uint8Array | DataView,
+  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>
 ): bigint {
-  const seed = options.seed ?? RAPID_SEED;
+  const {seed} = validateOptions(options);
 
   return rapidhash_internal(
     toDataView(message),
@@ -225,12 +249,10 @@ export function rapidhash_fast(
 }
 
 export function rapidhash_protected(
-  message: string,
-  options: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>> = {
-    seed: RAPID_SEED,
-  }
+  message: string | Uint8Array | DataView,
+  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>
 ): bigint {
-  const seed = options.seed ?? RAPID_SEED;
+  const {seed} = validateOptions(options);
 
   return rapidhash_internal(
     toDataView(message),
