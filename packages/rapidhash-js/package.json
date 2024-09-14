@@ -1,5 +1,5 @@
 {
-  "name": "rapidhash",
+  "name": "rapidhash-js",
   "version": "0.0.1",
   "description": "A TypeScript implementation of Rapidhash",
   "keywords": [

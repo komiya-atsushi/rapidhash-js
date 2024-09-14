@@ -1,5 +1,5 @@
 {
-  "name": "rapidhash-js",
+  "name": "rapidhash",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -34,6 +34,6 @@
     "typescript": "~5.4.3"
   },
   "workspaces": [
-    "packages/rapidhash"
+    "packages/rapidhash-js"
   ]
 }
