@@ -1,6 +1,8 @@
 # rapidhash
 
-[![npm version](https://badge.fury.io/js/rapidhash-js@2x.png)](https://badge.fury.io/js/rapidhash-js)
+[![npm version](https://badge.fury.io/js/rapidhash-js.svg)](https://badge.fury.io/js/rapidhash-js)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/komiya-atsushi/rapidhash-js/test.yaml)](https://github.com/komiya-atsushi/rapidhash-js/actions/workflows/test.yaml)
+[![NPM License](https://img.shields.io/npm/l/rapidhash-js)](https://opensource.org/licenses/MIT)
 
 A TypeScript implementation of the [Nicoshev/rapidhash](https://github.com/Nicoshev/rapidhash).
 
