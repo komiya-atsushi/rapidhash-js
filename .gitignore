@@ -3,6 +3,8 @@ node_modules/
 build/
 coverage/
 
+.nvmrc
+
 rapidhash-c/
 !rapidhash-c/Makefile
 !rapidhash-c/generate_test_vector.c
