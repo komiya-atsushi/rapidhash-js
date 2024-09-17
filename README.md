@@ -1,5 +1,7 @@
 # rapidhash
 
+[![npm version](https://badge.fury.io/js/rapidhash-js@2x.png)](https://badge.fury.io/js/rapidhash-js)
+
 A TypeScript implementation of the [Nicoshev/rapidhash](https://github.com/Nicoshev/rapidhash).
 
 Rapidhash is a fast hashing algorithm that passes all tests in [SMHasher](https://github.com/rurban/smhasher) and [SMHasher3](https://gitlab.com/fwojcik/smhasher3).
