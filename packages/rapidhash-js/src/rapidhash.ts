@@ -20,7 +20,7 @@ function rapid_mix(
   rapid_mum: (a: bigint, b: bigint) => bigint
 ): bigint {
   const m = rapid_mum(a, b);
-  return (m & 0xffff_ffff_ffff_ffffn) ^ (m >> 64n);
+  return BigInt.asUintN(64, m) ^ (m >> 64n);
 }
 
 function rapid_read32(buf: DataView, offset: number): bigint {
@@ -151,7 +151,7 @@ function rapidhash_internal(
   b ^= seed;
   const m = rapid_mum(a, b);
   return rapid_mix(
-    (m & 0xffff_ffff_ffff_ffffn) ^ secret[0] ^ lenBI,
+    BigInt.asUintN(64, m) ^ secret[0] ^ lenBI,
     (m >> 64n) ^ secret[1],
     rapid_mum
   );
