@@ -1,4 +1,4 @@
-# rapidhash
+# rapidhash-js
 
 [![npm version](https://badge.fury.io/js/rapidhash-js.svg)](https://badge.fury.io/js/rapidhash-js)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/komiya-atsushi/rapidhash-js/test.yaml)](https://github.com/komiya-atsushi/rapidhash-js/actions/workflows/test.yaml)
@@ -12,7 +12,7 @@ Rapidhash is a fast hashing algorithm that passes all tests in [SMHasher](https:
 
 
 ```bash
-npm install rapidhash
+npm install rapidhash-js
 ```
 
 ## Usage
