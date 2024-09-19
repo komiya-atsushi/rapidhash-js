@@ -18,7 +18,7 @@ npm install rapidhash-js
 ## Usage
 
 ```typescript
-import {rapidhash} from 'rapidhash';
+import {rapidhash} from 'rapidhash-js';
 
 // rapidhash() returns a 64-bit hash value represented as bigint.
 console.log(rapidhash('hello world'));  // Output: 17498481775468162579n
