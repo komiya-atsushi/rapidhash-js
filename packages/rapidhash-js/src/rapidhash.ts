@@ -23,20 +23,31 @@ function rapid_mix(
   return BigInt.asUintN(64, m) ^ (m >> 64n);
 }
 
-function rapid_read32(buf: DataView, offset: number): bigint {
-  return BigInt(buf.getUint32(offset, true));
+const read32x2Buffer = new Uint8Array(8);
+const read32x2View = new DataView(read32x2Buffer.buffer);
+
+function rapid_read32x2(
+  buf: DataView,
+  offset1: number,
+  offset2: number
+): bigint {
+  read32x2View.setUint32(4, buf.getUint32(offset1, true), true);
+  read32x2View.setUint32(0, buf.getUint32(offset2, true), true);
+  return read32x2View.getBigUint64(0, true);
 }
 
 function rapid_read64(buf: DataView, offset: number): bigint {
   return buf.getBigUint64(offset, true);
 }
 
-function rapid_readSmall(buf: DataView, offset: number, k: number): bigint {
-  const v1 = buf.getUint8(offset);
-  const v2 = buf.getUint8(offset + (k >> 1));
-  const v3 = buf.getUint8(offset + k - 1);
+const readSmallBuffer = new Uint8Array(8);
+const readSmallView = new DataView(readSmallBuffer.buffer);
 
-  return (BigInt(v1) << 56n) | (BigInt(v2) << 32n) | BigInt(v3);
+function rapid_readSmall(buf: DataView, offset: number, k: number): bigint {
+  readSmallBuffer[7] = buf.getUint8(offset);
+  readSmallBuffer[4] = buf.getUint8(offset + (k >> 1));
+  readSmallBuffer[0] = buf.getUint8(offset + k - 1);
+  return readSmallView.getBigUint64(0, true);
 }
 
 function rapidhash_internal(
@@ -56,9 +67,9 @@ function rapidhash_internal(
   if (len <= 16) {
     if (len >= 4) {
       const last = len - 4;
-      a = (rapid_read32(key, 0) << 32n) | rapid_read32(key, last);
+      a = rapid_read32x2(key, 0, last);
       const delta = (len & 24) >> (len >> 3);
-      b = (rapid_read32(key, delta) << 32n) | rapid_read32(key, last - delta);
+      b = rapid_read32x2(key, delta, last - delta);
     } else if (len > 0) {
       a = rapid_readSmall(key, 0, len);
       b = 0n;
