@@ -236,20 +236,30 @@ function validateOptions(
 }
 
 const textEncoder = new TextEncoder();
+const utf8BufferSize = 2048;
+const stringLengthThresholdToUseBuffer = utf8BufferSize / 3;
+const utf8Buffer = new Uint8Array(utf8BufferSize);
 
 function toDataView(message: string | Uint8Array | DataView): DataView {
-  if (message instanceof DataView) {
-    return message;
+  if (typeof message === 'string') {
+    if (message.length <= stringLengthThresholdToUseBuffer) {
+      const {written} = textEncoder.encodeInto(message, utf8Buffer);
+      return new DataView(utf8Buffer.buffer, 0, written);
+    }
+
+    const utf8bytes = textEncoder.encode(message);
+    return new DataView(
+      utf8bytes.buffer,
+      utf8bytes.byteOffset,
+      utf8bytes.byteLength
+    );
   }
+
   if (message instanceof Uint8Array) {
     return new DataView(message.buffer, message.byteOffset, message.byteLength);
   }
-  const utf8bytes = textEncoder.encode(message);
-  return new DataView(
-    utf8bytes.buffer,
-    utf8bytes.byteOffset,
-    utf8bytes.byteLength
-  );
+
+  return message;
 }
 
 /**
