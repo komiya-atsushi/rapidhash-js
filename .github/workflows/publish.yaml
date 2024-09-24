@@ -61,7 +61,7 @@ jobs:
         run: |
           npm ci
           npm -w packages/rapidhash-js run compile
-          cp README.md LICENSE packages/rapidhash-js/
+          cp README.md LICENSE CHANGELOG.md packages/rapidhash-js/
 
       - name: Publish
         run: npm -w packages/rapidhash-js publish --provenance --access public

@@ -27,6 +27,7 @@
   },
   "main": "build/src/index.js",
   "files": [
-    "build/src/**/*.{js,d.ts}"
+    "build/src/**/*.{js,d.ts}",
+    "CHANGELOG.md"
   ]
 }
