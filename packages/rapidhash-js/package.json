@@ -23,9 +23,13 @@
   },
   "scripts": {
     "compile": "tsc",
+    "test": "npm run test:jest && npm run test:attw",
+    "test:jest": "jest --verbose --coverage",
+    "test:attw": "attw --pack .",
     "pretest": "npm run compile"
   },
   "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
   "files": [
     "build/src/**/*.{js,d.ts}",
     "CHANGELOG.md"

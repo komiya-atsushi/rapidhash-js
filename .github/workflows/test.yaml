@@ -14,8 +14,4 @@ jobs:
         with:
           node-version: ${{ matrix.version }}
       - run: npm ci
-      - run: npm run test
-#      - name: Upload coverage reports to Codecov
-#        uses: codecov/codecov-action@v3
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - run: npm --workspaces --if-present run test
