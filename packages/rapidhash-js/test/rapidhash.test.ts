@@ -1,4 +1,4 @@
-import {rapidhash, rapidhash_fast, rapidhash_protected} from '../src';
+import {rapidhash, rapidhash_fast, rapidhash_protected} from '../src/cjs';
 import * as testVectorsFast from './test_vector_fast';
 import * as testVectorsProtected from './test_vector_protected';
 
