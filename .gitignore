@@ -8,3 +8,5 @@ coverage/
 rapidhash-c/
 !rapidhash-c/Makefile
 !rapidhash-c/generate_test_vector.c
+
+packages/rapidhash-js/lib/

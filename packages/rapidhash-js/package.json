@@ -22,16 +22,28 @@
     "node": ">=18"
   },
   "scripts": {
-    "compile": "tsc",
+    "build": "rollup -c",
     "test": "npm run test:jest && npm run test:attw",
     "test:jest": "jest --verbose --coverage",
     "test:attw": "attw --pack .",
-    "pretest": "npm run compile"
+    "pretest": "npm run build"
   },
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "types": "lib/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "require": {
+        "default": "./lib/cjs/index.js",
+        "types": "./lib/cjs/index.d.ts"
+      },
+      "import": {
+        "default": "./lib/esm/index.mjs",
+        "types": "./lib/esm/index.d.mts"
+      }
+    }
+  },
   "files": [
-    "build/src/**/*.{js,d.ts}",
+    "lib/**/*.*",
     "CHANGELOG.md"
   ],
   "devDependencies": {

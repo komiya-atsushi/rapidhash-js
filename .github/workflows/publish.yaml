@@ -60,7 +60,7 @@ jobs:
       - name: Build
         run: |
           npm ci
-          npm -w packages/rapidhash-js run compile
+          npm -w packages/rapidhash-js run build
           cp README.md LICENSE CHANGELOG.md packages/rapidhash-js/
 
       - name: Publish
