@@ -1,0 +1,10 @@
+{
+  "name": "test-cjs",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "rapidhash-js": "^1.0.3"
+  }
+}

@@ -35,6 +35,7 @@
     "typescript": "~5.4.3"
   },
   "workspaces": [
-    "packages/rapidhash-js"
+    "packages/rapidhash-js",
+    "packages/test-cjs"
   ]
 }
