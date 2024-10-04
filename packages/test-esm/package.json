@@ -1,0 +1,11 @@
+{
+  "name": "test-esm",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "rapidhash-js": "^1.0.3"
+  }
+}

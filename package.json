@@ -36,6 +36,7 @@
   },
   "workspaces": [
     "packages/rapidhash-js",
-    "packages/test-cjs"
+    "packages/test-cjs",
+    "packages/test-esm"
   ]
 }
