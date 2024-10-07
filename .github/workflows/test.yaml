@@ -10,8 +10,12 @@ jobs:
         version: [18, 20, 22]
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.version }}
+          cache: 'npm'
+
       - run: npm ci
+
       - run: npm --workspaces --if-present run test
