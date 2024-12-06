@@ -22,23 +22,23 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "tsup src/index.ts",
     "test": "npm run test:jest && npm run test:attw",
     "test:jest": "jest --verbose --coverage",
     "test:attw": "attw --pack .",
     "pretest": "npm run build"
   },
-  "main": "lib/cjs/index.js",
-  "types": "lib/cjs/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "exports": {
     ".": {
       "require": {
-        "default": "./lib/cjs/index.js",
-        "types": "./lib/cjs/index.d.ts"
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
       },
       "import": {
-        "default": "./lib/esm/index.mjs",
-        "types": "./lib/esm/index.d.mts"
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
       }
     }
   },

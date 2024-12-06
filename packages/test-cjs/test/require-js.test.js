@@ -4,8 +4,8 @@ test("rapidhash('hello') = 2188375479838694330n", () => {
   expect(rapidhash('hello')).toEqual(2188375479838694330n);
 });
 
-test('CommonJS module (lib/cjs/index.js) should be loaded', () => {
-  expect(require.resolve('rapidhash-js')).toMatch(/lib\/cjs\/index.js$/);
+test('CommonJS module (lib/index.js) should be loaded', () => {
+  expect(require.resolve('rapidhash-js')).toMatch(/lib\/index.js$/);
 });
 
 test('Source map should be applied in error stack trace', () => {

@@ -5,13 +5,13 @@ test("rapidhash('hello') = 2188375479838694330n", () => {
   expect(rapidhash('hello')).toEqual(2188375479838694330n);
 });
 
-test('ES module (lib/esm/index.mjs) should be loaded', () => {
+test('ES module (lib/index.mjs) should be loaded', () => {
   const result = child_process
     .execSync('node ./src/show-import-meta-resolve-rapidhash-js.js')
     .toString()
     .trim();
 
-  expect(result).toMatch(/lib\/esm\/index.mjs$/);
+  expect(result).toMatch(/lib\/index.mjs$/);
 });
 
 test('Source map should be applied in error stack trace', () => {
@@ -23,5 +23,5 @@ test('Source map should be applied in error stack trace', () => {
     }
   })();
 
-  expect(result).toMatch(/rapidhash\.mts:\d+:\d+/);
+  expect(result).toMatch(/rapidhash\.ts:\d+:\d+/);
 });
