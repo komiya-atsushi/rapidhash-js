@@ -45,9 +45,5 @@
   "files": [
     "lib/**/*.*",
     "CHANGELOG.md"
-  ],
-  "devDependencies": {
-    "@rollup/plugin-typescript": "^12.1.0",
-    "rollup": "^4.24.0"
-  }
+  ]
 }
