@@ -1,10 +1,17 @@
 {
   "name": "benchmark",
   "version": "1.0.0",
+  "type": "module",
   "engines": {
     "node": ">=18"
   },
-  "scripts": {},
+  "scripts": {
+    "compile": "tsc",
+    "prebench": "npm run compile",
+    "bench": "npm run bench:string && npm run bench:bytes",
+    "bench:string": "node --expose-gc build/benchmark-string.js",
+    "bench:bytes": "node --expose-gc build/benchmark-bytes.js"
+  },
   "private": true,
   "dependencies": {
     "mitata": "^1.0.23",
