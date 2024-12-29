@@ -5,6 +5,8 @@
     "node": ">=18"
   },
   "scripts": {},
-  "devDependencies": {},
-  "private": true
+  "private": true,
+  "dependencies": {
+    "mitata": "^1.0.23"
+  }
 }
