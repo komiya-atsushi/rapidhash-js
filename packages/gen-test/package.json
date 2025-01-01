@@ -4,7 +4,9 @@
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {},
+  "dependencies": {
+    "bun": "^1.1.42"
+  },
   "scripts": {},
   "private": true
 }
