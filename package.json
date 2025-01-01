@@ -39,6 +39,7 @@
     "packages/rapidhash-js",
     "packages/test-cjs",
     "packages/test-esm",
-    "packages/benchmark"
+    "packages/benchmark",
+    "packages/gen-test"
   ]
 }
