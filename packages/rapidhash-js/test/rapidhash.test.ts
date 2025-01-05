@@ -56,10 +56,34 @@ describe('rapidhash_fast', () => {
   });
 
   describe('Hash long messages', () => {
+    const uint8array = new TextEncoder().encode(longMessage);
+
     test.each(testVectors2)(
-      'length = %d, seed = %s',
+      '[string] length = %d, seed = %s',
       (length: number, seed: bigint, expected: bigint) => {
         const result = rapidhash(longMessage.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'fast',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors2)(
+      '[Uint8Array] length = %d, seed = %s',
+      (length: number, seed: bigint, expected: bigint) => {
+        const result = rapidhash(uint8array.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'fast',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors2)(
+      '[DataView] length = %d, seed = %s',
+      (length: number, seed: bigint, expected: bigint) => {
+        const result = rapidhash(new DataView(uint8array.buffer, 0, length), {
           seed,
           rapidMumBehaviour: 'fast',
         });
@@ -94,10 +118,34 @@ describe('rapidhash_protected', () => {
   });
 
   describe('Hash long messages', () => {
+    const uint8array = new TextEncoder().encode(longMessage);
+
     test.each(testVectors2)(
-      'length = %d, seed = %s',
+      '[strig] length = %d, seed = %s',
       (length: number, seed: bigint, expected: bigint) => {
         const result = rapidhash(longMessage.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'protected',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors2)(
+      '[Uint8Array] length = %d, seed = %s',
+      (length: number, seed: bigint, expected: bigint) => {
+        const result = rapidhash(uint8array.slice(0, length), {
+          seed,
+          rapidMumBehaviour: 'protected',
+        });
+        expect(result).toEqual(expected);
+      }
+    );
+
+    test.each(testVectors2)(
+      '[DataView] length = %d, seed = %s',
+      (length: number, seed: bigint, expected: bigint) => {
+        const result = rapidhash(new DataView(uint8array.buffer, 0, length), {
           seed,
           rapidMumBehaviour: 'protected',
         });
