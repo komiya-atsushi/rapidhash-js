@@ -7,6 +7,10 @@
   "dependencies": {
     "bun": "^1.1.42"
   },
-  "scripts": {},
+  "scripts": {
+    "clone:rapidhash": "git clone --depth 1 --branch rapidhash_v1.0 https://github.com/Nicoshev/rapidhash.git src/rapidhash",
+    "generate": "bun run src/index.ts",
+    "cp": "cp generated/*.ts ../rapidhash-js/test"
+  },
   "private": true
 }

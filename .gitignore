@@ -5,8 +5,7 @@ coverage/
 
 .nvmrc
 
-rapidhash-c/
-!rapidhash-c/Makefile
-!rapidhash-c/generate_test_vector.c
+packages/gen-test/generated/
+packages/gen-test/src/rapidhash/
 
 packages/rapidhash-js/lib/
