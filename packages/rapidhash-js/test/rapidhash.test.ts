@@ -1,6 +1,6 @@
 import {rapidhash, rapidhash_fast, rapidhash_protected} from '../src/';
-import * as testVectorsFast from './test_vector_fast';
-import * as testVectorsProtected from './test_vector_protected';
+import * as testVectorsFast from './v1/test_vector_fast';
+import * as testVectorsProtected from './v1/test_vector_protected';
 
 describe('Basic functionality', () => {
   const message = 'hello';
