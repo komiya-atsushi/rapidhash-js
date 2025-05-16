@@ -1,18 +1,14 @@
 import {do_not_optimize, measure} from 'mitata';
-import {RandomData, RandomDataArgs} from './data.js';
+import type {RandomData, RandomDataArgs} from './data.js';
 
 type MeasureResult = Awaited<ReturnType<typeof measure>>;
 
 export class HashFunctionBenchmark<T extends string | Uint8Array> {
-  private _generateRandomData:
-    | ((args: RandomDataArgs) => RandomData<T>)
-    | undefined;
+  private _generateRandomData: ((args: RandomDataArgs) => RandomData<T>) | undefined;
   private _randomDataArgs: Record<string, RandomDataArgs> = {};
   private _targetFunctions: [string, (v: T) => bigint][] = [];
 
-  randomDataGenerator(
-    generator: (args: RandomDataArgs) => RandomData<T>
-  ): this {
+  randomDataGenerator(generator: (args: RandomDataArgs) => RandomData<T>): this {
     this._generateRandomData = generator;
     return this;
   }
@@ -55,10 +51,7 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
     return reports;
   }
 
-  private async measure(
-    data: RandomData<T>,
-    targetFunction: (v: T) => bigint
-  ): Promise<MeasureResult> {
+  private async measure(data: RandomData<T>, targetFunction: (v: T) => bigint): Promise<MeasureResult> {
     return await measure(
       function* () {
         yield {
@@ -75,7 +68,7 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
         warmup_samples: 1000,
         min_samples: 1004,
         samples_threshold: 1000,
-      }
+      },
     );
   }
 }
@@ -83,13 +76,13 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
 export class Report {
   constructor(
     private readonly benchmarkName: string,
-    private readonly results: (MeasureResult & {functionName: string})[]
+    private readonly results: (MeasureResult & {functionName: string})[],
   ) {}
 
   show(): void {
     console.log(`[${this.benchmarkName}]`);
 
-    const results = this.results.map(result => {
+    const results = this.results.map((result) => {
       return {
         ...result,
         unitOfTime: this.unitOfTime(result.avg),
@@ -101,22 +94,13 @@ export class Report {
       };
     });
 
-    const [unit, divisor] = results.reduce(
-      (min, {unitOfTime: cur}) => (cur[1] < min[1] ? cur : min),
-      ['s', 1e9]
-    );
-    const maxFunctionNameLength = results.reduce(
-      (max, {functionNameLength}) => Math.max(max, functionNameLength),
-      0
-    );
-    const maxOpsSecLength = results.reduce(
-      (max, {opsSec}) => Math.max(max, opsSec.length),
-      0
-    );
+    const [unit, divisor] = results.reduce((min, {unitOfTime: cur}) => (cur[1] < min[1] ? cur : min), ['s', 1e9]);
+    const maxFunctionNameLength = results.reduce((max, {functionNameLength}) => Math.max(max, functionNameLength), 0);
+    const maxOpsSecLength = results.reduce((max, {opsSec}) => Math.max(max, opsSec.length), 0);
 
     for (const result of results) {
       console.log(
-        `  ${result.functionName.padEnd(maxFunctionNameLength + 1)}: ${result.opsSec.padStart(maxOpsSecLength)} ops/s (${(result.avg / divisor).toFixed(2)} ${unit}/iter)`
+        `  ${result.functionName.padEnd(maxFunctionNameLength + 1)}: ${result.opsSec.padStart(maxOpsSecLength)} ops/s (${(result.avg / divisor).toFixed(2)} ${unit}/iter)`,
       );
     }
 

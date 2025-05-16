@@ -8,9 +8,8 @@
   },
   "scripts": {
     "test": "npm --workspaces --if-present run test",
-    "lint": "gts lint",
-    "clean": "gts clean",
-    "fix": "gts fix"
+    "biome:check": "npx @biomejs/biome check --write",
+    "biome:ci": "npx @biomejs/biome ci"
   },
   "keywords": [],
   "author": {

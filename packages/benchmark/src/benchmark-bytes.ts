@@ -1,6 +1,6 @@
-import {RandomBytes} from './data.js';
-import {HashFunctionBenchmark} from './benchmark-base.js';
 import {rapidhash_fast, rapidhash_protected} from 'rapidhash-js';
+import {HashFunctionBenchmark} from './benchmark-base.js';
+import {RandomBytes} from './data.js';
 
 async function main(): Promise<void> {
   const result = await new HashFunctionBenchmark()
@@ -35,8 +35,8 @@ async function main(): Promise<void> {
       minLengthInclusive: 1024 * 1024,
       maxLengthInclusive: 1024 * 1024,
     })
-    .measurementTarget('rapidhash_fast', b => rapidhash_fast(b))
-    .measurementTarget('rapidhash_protected', b => rapidhash_protected(b))
+    .measurementTarget('rapidhash_fast', (b) => rapidhash_fast(b))
+    .measurementTarget('rapidhash_protected', (b) => rapidhash_protected(b))
     .run();
 
   for (const report of result) {

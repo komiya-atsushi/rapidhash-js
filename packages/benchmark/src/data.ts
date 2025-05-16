@@ -18,9 +18,7 @@ class Xorshift64Star {
   }
 
   nextNumber(minInclusive: number, maxExclusive: number): number {
-    return (
-      minInclusive + Number(this.next() % BigInt(maxExclusive - minInclusive))
-    );
+    return minInclusive + Number(this.next() % BigInt(maxExclusive - minInclusive));
   }
 }
 
@@ -52,16 +50,13 @@ export class RandomData<T> {
     args: RandomDataArgs & {
       generate: (rng: Xorshift64Star, len: number) => T;
       construct: (data: T[]) => RandomData<T>;
-    }
+    },
   ): RandomData<T> {
     const rng = new Xorshift64Star(123n);
     const result: T[] = [];
 
     for (let i = 0; i < args.numItems; i++) {
-      const len = rng.nextNumber(
-        args.minLengthInclusive,
-        args.maxLengthInclusive + 1
-      );
+      const len = rng.nextNumber(args.minLengthInclusive, args.maxLengthInclusive + 1);
 
       result.push(args.generate(rng, len));
     }
@@ -76,21 +71,18 @@ export class RandomStrings extends RandomData<string> {
   }
 
   static generate(args: RandomDataArgs): RandomStrings {
-    const alphanumeric =
-      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const alphanumeric = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     return RandomData._generate<string>({
       ...args,
       generate: (rng, len) => {
         const chars: string[] = [];
         for (let j = 0; j < len; j++) {
-          chars.push(
-            alphanumeric.charAt(rng.nextNumber(0, alphanumeric.length))
-          );
+          chars.push(alphanumeric.charAt(rng.nextNumber(0, alphanumeric.length)));
         }
         return chars.join('');
       },
-      construct: data => new RandomStrings(data),
+      construct: (data) => new RandomStrings(data),
     });
   }
 }
@@ -110,7 +102,7 @@ export class RandomBytes extends RandomData<Uint8Array> {
         }
         return bytes;
       },
-      construct: data => new RandomBytes(data),
+      construct: (data) => new RandomBytes(data),
     });
   }
 }

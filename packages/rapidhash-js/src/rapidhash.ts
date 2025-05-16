@@ -1,33 +1,18 @@
 type RapidSecret = [bigint, bigint, bigint];
 type RapidMix = (a: bigint, b: bigint) => bigint;
-type RapidhashEpilogue = (
-  a: bigint,
-  b: bigint,
-  secret: RapidSecret,
-  len: bigint
-) => bigint;
+type RapidhashEpilogue = (a: bigint, b: bigint, secret: RapidSecret, len: bigint) => bigint;
 
 const RAPID_SEED = 0xbdd89aa982704029n;
-const rapid_secret: RapidSecret = [
-  0x2d358dccaa6c78a5n,
-  0x8bb84b93962eacc9n,
-  0x4b33a62ed433d4a3n,
-];
+const rapid_secret: RapidSecret = [0x2d358dccaa6c78a5n, 0x8bb84b93962eacc9n, 0x4b33a62ed433d4a3n];
 
 function rapid_mix_fast(a: bigint, b: bigint): bigint {
   const m = a * b;
   return BigInt.asUintN(64, m) ^ (m >> 64n);
 }
 
-function rapidhash_epilogue_fast(
-  a: bigint,
-  b: bigint,
-  secret: RapidSecret,
-  len: bigint
-): bigint {
+function rapidhash_epilogue_fast(a: bigint, b: bigint, secret: RapidSecret, len: bigint): bigint {
   const m0 = a * b;
-  const m1 =
-    (BigInt.asUintN(64, m0) ^ secret[0] ^ len) * ((m0 >> 64n) ^ secret[1]);
+  const m1 = (BigInt.asUintN(64, m0) ^ secret[0] ^ len) * ((m0 >> 64n) ^ secret[1]);
   return BigInt.asUintN(64, m1) ^ (m1 >> 64n);
 }
 
@@ -36,12 +21,7 @@ function rapid_mix_protected(a: bigint, b: bigint): bigint {
   return BigInt.asUintN(64, m) ^ (m >> 64n) ^ a ^ b;
 }
 
-function rapidhash_epilogue_protected(
-  a0: bigint,
-  b0: bigint,
-  secret: RapidSecret,
-  len: bigint
-): bigint {
+function rapidhash_epilogue_protected(a0: bigint, b0: bigint, secret: RapidSecret, len: bigint): bigint {
   const m0 = a0 * b0;
   const a1 = BigInt.asUintN(64, m0) ^ secret[0] ^ len ^ a0;
   const b1 = (m0 >> 64n) ^ secret[1] ^ b0;
@@ -52,11 +32,7 @@ function rapidhash_epilogue_protected(
 const read32x2Buffer = new Uint8Array(8);
 const read32x2View = new DataView(read32x2Buffer.buffer);
 
-function rapid_read32x2(
-  buf: DataView,
-  offset1: number,
-  offset2: number
-): bigint {
+function rapid_read32x2(buf: DataView, offset1: number, offset2: number): bigint {
   read32x2View.setUint32(4, buf.getUint32(offset1, true), true);
   read32x2View.setUint32(0, buf.getUint32(offset2, true), true);
   return read32x2View.getBigUint64(0, true);
@@ -81,7 +57,7 @@ function rapidhash_internal(
   seed: bigint,
   secret: RapidSecret,
   rapid_mix: RapidMix,
-  rapidhash_epilogue: RapidhashEpilogue
+  rapidhash_epilogue: RapidhashEpilogue,
 ): bigint {
   const len = key.byteLength;
   const lenBI = BigInt(key.byteLength);
@@ -109,49 +85,23 @@ function rapidhash_internal(
     let p = 0;
 
     if (i > 48) {
-      let see1 = seed,
-        see2 = seed;
+      let see1 = seed;
+      let see2 = seed;
+
       while (i >= 96) {
-        seed = rapid_mix(
-          rapid_read64(key, p) ^ secret[0],
-          rapid_read64(key, p + 8) ^ seed
-        );
-        see1 = rapid_mix(
-          rapid_read64(key, p + 16) ^ secret[1],
-          rapid_read64(key, p + 24) ^ see1
-        );
-        see2 = rapid_mix(
-          rapid_read64(key, p + 32) ^ secret[2],
-          rapid_read64(key, p + 40) ^ see2
-        );
-        seed = rapid_mix(
-          rapid_read64(key, p + 48) ^ secret[0],
-          rapid_read64(key, p + 56) ^ seed
-        );
-        see1 = rapid_mix(
-          rapid_read64(key, p + 64) ^ secret[1],
-          rapid_read64(key, p + 72) ^ see1
-        );
-        see2 = rapid_mix(
-          rapid_read64(key, p + 80) ^ secret[2],
-          rapid_read64(key, p + 88) ^ see2
-        );
+        seed = rapid_mix(rapid_read64(key, p) ^ secret[0], rapid_read64(key, p + 8) ^ seed);
+        see1 = rapid_mix(rapid_read64(key, p + 16) ^ secret[1], rapid_read64(key, p + 24) ^ see1);
+        see2 = rapid_mix(rapid_read64(key, p + 32) ^ secret[2], rapid_read64(key, p + 40) ^ see2);
+        seed = rapid_mix(rapid_read64(key, p + 48) ^ secret[0], rapid_read64(key, p + 56) ^ seed);
+        see1 = rapid_mix(rapid_read64(key, p + 64) ^ secret[1], rapid_read64(key, p + 72) ^ see1);
+        see2 = rapid_mix(rapid_read64(key, p + 80) ^ secret[2], rapid_read64(key, p + 88) ^ see2);
         p += 96;
         i -= 96;
       }
       if (i >= 48) {
-        seed = rapid_mix(
-          rapid_read64(key, p) ^ secret[0],
-          rapid_read64(key, p + 8) ^ seed
-        );
-        see1 = rapid_mix(
-          rapid_read64(key, p + 16) ^ secret[1],
-          rapid_read64(key, p + 24) ^ see1
-        );
-        see2 = rapid_mix(
-          rapid_read64(key, p + 32) ^ secret[2],
-          rapid_read64(key, p + 40) ^ see2
-        );
+        seed = rapid_mix(rapid_read64(key, p) ^ secret[0], rapid_read64(key, p + 8) ^ seed);
+        see1 = rapid_mix(rapid_read64(key, p + 16) ^ secret[1], rapid_read64(key, p + 24) ^ see1);
+        see2 = rapid_mix(rapid_read64(key, p + 32) ^ secret[2], rapid_read64(key, p + 40) ^ see2);
         p += 48;
         i -= 48;
       }
@@ -160,15 +110,9 @@ function rapidhash_internal(
     }
 
     if (i > 16) {
-      seed = rapid_mix(
-        rapid_read64(key, p) ^ secret[2],
-        rapid_read64(key, p + 8) ^ seed ^ secret[1]
-      );
+      seed = rapid_mix(rapid_read64(key, p) ^ secret[2], rapid_read64(key, p + 8) ^ seed ^ secret[1]);
       if (i > 32) {
-        seed = rapid_mix(
-          rapid_read64(key, p + 16) ^ secret[2],
-          rapid_read64(key, p + 24) ^ seed
-        );
+        seed = rapid_mix(rapid_read64(key, p + 16) ^ secret[2], rapid_read64(key, p + 24) ^ seed);
       }
     }
     a = rapid_read64(key, p + i - 16);
@@ -207,9 +151,7 @@ function isBigUint64(value: bigint): boolean {
   return value >= 0n && value <= 0xffff_ffff_ffff_ffffn;
 }
 
-function validateOptions(
-  options: Partial<RapidhashOptions> | undefined
-): RapidhashOptions {
+function validateOptions(options: Partial<RapidhashOptions> | undefined): RapidhashOptions {
   const result: RapidhashOptions = {
     seed: RAPID_SEED,
     rapidMumBehaviour: defaultRapidMumBehaviour,
@@ -221,9 +163,7 @@ function validateOptions(
 
   if (options.seed !== undefined) {
     if (!isBigUint64(options.seed)) {
-      throw new Error(
-        `seed must be a 64-bit unsigned bigint value: ${options.seed}`
-      );
+      throw new Error(`seed must be a 64-bit unsigned bigint value: ${options.seed}`);
     }
     result.seed = options.seed;
   }
@@ -248,11 +188,7 @@ function toDataView(message: string | Uint8Array | DataView): DataView {
     }
 
     const utf8bytes = textEncoder.encode(message);
-    return new DataView(
-      utf8bytes.buffer,
-      utf8bytes.byteOffset,
-      utf8bytes.byteLength
-    );
+    return new DataView(utf8bytes.buffer, utf8bytes.byteOffset, utf8bytes.byteLength);
   }
 
   if (message instanceof Uint8Array) {
@@ -270,21 +206,11 @@ function toDataView(message: string | Uint8Array | DataView): DataView {
  * @param options.seed {bigint} 64-bit unsigned seed value.
  * @param options.rapidMumBehaviour {'fast'|'protected'} Alters behaviour of the rapid_mum function. Defaults to 'fast'.
  */
-export function rapidhash(
-  message: string | Uint8Array | DataView,
-  options?: Partial<RapidhashOptions>
-): bigint {
+export function rapidhash(message: string | Uint8Array | DataView, options?: Partial<RapidhashOptions>): bigint {
   const {seed, rapidMumBehaviour} = validateOptions(options);
-  const {rapid_mix, rapidhash_epilogue} =
-    rapidMumImplementations[rapidMumBehaviour];
+  const {rapid_mix, rapidhash_epilogue} = rapidMumImplementations[rapidMumBehaviour];
 
-  return rapidhash_internal(
-    toDataView(message),
-    seed,
-    rapid_secret,
-    rapid_mix,
-    rapidhash_epilogue
-  );
+  return rapidhash_internal(toDataView(message), seed, rapid_secret, rapid_mix, rapidhash_epilogue);
 }
 
 /**
@@ -297,17 +223,11 @@ export function rapidhash(
  */
 export function rapidhash_fast(
   message: string | Uint8Array | DataView,
-  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>
+  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>,
 ): bigint {
   const {seed} = validateOptions(options);
 
-  return rapidhash_internal(
-    toDataView(message),
-    seed,
-    rapid_secret,
-    rapid_mix_fast,
-    rapidhash_epilogue_fast
-  );
+  return rapidhash_internal(toDataView(message), seed, rapid_secret, rapid_mix_fast, rapidhash_epilogue_fast);
 }
 
 /**
@@ -320,15 +240,9 @@ export function rapidhash_fast(
  */
 export function rapidhash_protected(
   message: string | Uint8Array | DataView,
-  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>
+  options?: Partial<Omit<RapidhashOptions, 'rapidMumBehaviour'>>,
 ): bigint {
   const {seed} = validateOptions(options);
 
-  return rapidhash_internal(
-    toDataView(message),
-    seed,
-    rapid_secret,
-    rapid_mix_protected,
-    rapidhash_epilogue_protected
-  );
+  return rapidhash_internal(toDataView(message), seed, rapid_secret, rapid_mix_protected, rapidhash_epilogue_protected);
 }

@@ -9,11 +9,11 @@ test('CommonJS module (lib/index.js) should be loaded', () => {
 });
 
 test('Source map should be applied in error stack trace', () => {
-  const result = (function () {
+  const result = (() => {
     try {
       rapidhash('hello', {seed: 1n << 64n});
     } catch (e) {
-      return e.stack.split('\n').find(line => line.includes('validateOptions'));
+      return e.stack.split('\n').find((line) => line.includes('validateOptions'));
     }
   })();
 

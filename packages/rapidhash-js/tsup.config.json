@@ -1,8 +1,5 @@
 {
-  "format": [
-    "cjs",
-    "esm"
-  ],
+  "format": ["cjs", "esm"],
   "dts": true,
   "clean": true,
   "sourcemap": true,

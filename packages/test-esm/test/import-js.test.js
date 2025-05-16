@@ -6,20 +6,17 @@ test("rapidhash('hello') = 2188375479838694330n", () => {
 });
 
 test('ES module (lib/index.mjs) should be loaded', () => {
-  const result = child_process
-    .execSync('node ./src/show-import-meta-resolve-rapidhash-js.js')
-    .toString()
-    .trim();
+  const result = child_process.execSync('node ./src/show-import-meta-resolve-rapidhash-js.js').toString().trim();
 
   expect(result).toMatch(/lib\/index.mjs$/);
 });
 
 test('Source map should be applied in error stack trace', () => {
-  const result = (function () {
+  const result = (() => {
     try {
       rapidhash('hello', {seed: 1n << 64n});
     } catch (e) {
-      return e.stack.split('\n').find(line => line.includes('validateOptions'));
+      return e.stack.split('\n').find((line) => line.includes('validateOptions'));
     }
   })();
 
