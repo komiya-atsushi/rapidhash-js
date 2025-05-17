@@ -1,5 +1,6 @@
-import {rapidhash_fast, rapidhash_protected} from 'rapidhash-js';
+import {rapidhash_v1_fast, rapidhash_v1_protected, rapidhash_v2_fast, rapidhash_v2_protected} from 'rapidhash-js';
 import {HashFunctionBenchmark} from './benchmark-base.js';
+import {showBenchmarkEnvironment} from './benchmark-env.js';
 import {RandomStrings} from './data.js';
 
 async function main(): Promise<void> {
@@ -20,9 +21,14 @@ async function main(): Promise<void> {
       minLengthInclusive: 1,
       maxLengthInclusive: 16,
     })
-    .randomDataArgs('17-128 characters', {
+    .randomDataArgs('17-56 characters', {
       numItems: 1024,
       minLengthInclusive: 17,
+      maxLengthInclusive: 56,
+    })
+    .randomDataArgs('57-128 characters', {
+      numItems: 1024,
+      minLengthInclusive: 57,
       maxLengthInclusive: 128,
     })
     .randomDataArgs('129-256 characters', {
@@ -35,9 +41,13 @@ async function main(): Promise<void> {
       minLengthInclusive: 1024 * 1024,
       maxLengthInclusive: 1024 * 1024,
     })
-    .measurementTarget('rapidhash_fast', (str) => rapidhash_fast(str))
-    .measurementTarget('rapidhash_protected', (str) => rapidhash_protected(str))
+    .measurementTarget('rapidhash_v1_fast', (str) => rapidhash_v1_fast(str))
+    .measurementTarget('rapidhash_v1_protected', (str) => rapidhash_v1_protected(str))
+    .measurementTarget('rapidhash_v2_fast', (str) => rapidhash_v2_fast(str))
+    .measurementTarget('rapidhash_v2_protected', (str) => rapidhash_v2_protected(str))
     .run();
+
+  showBenchmarkEnvironment();
 
   for (const report of result) {
     report.show();
