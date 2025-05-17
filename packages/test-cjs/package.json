@@ -8,6 +8,6 @@
     "rapidhash-js": "^1.0.3"
   },
   "scripts": {
-    "test": "jest --verbose"
+    "test": "vitest --run"
   }
 }

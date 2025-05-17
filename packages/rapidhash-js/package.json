@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "test": "npm run test:jest && npm run test:attw",
-    "test:jest": "jest --coverage",
+    "test:jest": "vitest --run",
     "test:attw": "attw --pack .",
     "pretest": "npm run build"
   },
