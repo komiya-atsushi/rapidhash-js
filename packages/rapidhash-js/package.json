@@ -1,8 +1,11 @@
 {
   "name": "rapidhash-js",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "A TypeScript implementation of Rapidhash",
-  "keywords": ["hash", "rapidhash"],
+  "keywords": [
+    "hash",
+    "rapidhash"
+  ],
   "author": {
     "name": "KOMIYA Atsushi",
     "url": "https://github.com/komiya-atsushi"
@@ -39,5 +42,8 @@
       }
     }
   },
-  "files": ["lib/**/*.*", "CHANGELOG.md"]
+  "files": [
+    "lib/**/*.*",
+    "CHANGELOG.md"
+  ]
 }
