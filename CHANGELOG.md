@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.0.0] - 2025-05-18
+
+- Implement [rapidhash v2](https://github.com/Nicoshev/rapidhash/pull/16).
+
 ## [1.0.4] - 2024-10-07
 
 - Support both ESM and CommonJS modules.
