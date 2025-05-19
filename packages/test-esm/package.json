@@ -6,7 +6,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "rapidhash-js": "^1.0.3"
+    "rapidhash-js": "../rapidhash-js"
   },
   "scripts": {
     "test": "vitest --run"
