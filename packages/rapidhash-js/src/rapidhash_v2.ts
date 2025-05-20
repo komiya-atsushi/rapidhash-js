@@ -68,40 +68,28 @@ function rapidhash_v2_internal(
     let p = 0;
     let see1 = seed;
     let see2 = seed;
-    let see3 = seed;
-    let see4 = seed;
-    let see5 = seed;
-    let see6 = seed;
-
-    while (i >= 224) {
-      seed = rapid_mix(rapid_read64(key, p) ^ secret[0], rapid_read64(key, p + 8) ^ seed);
-      see1 = rapid_mix(rapid_read64(key, p + 16) ^ secret[1], rapid_read64(key, p + 24) ^ see1);
-      see2 = rapid_mix(rapid_read64(key, p + 32) ^ secret[2], rapid_read64(key, p + 40) ^ see2);
-      see3 = rapid_mix(rapid_read64(key, p + 48) ^ secret[3], rapid_read64(key, p + 56) ^ see3);
-      see4 = rapid_mix(rapid_read64(key, p + 64) ^ secret[4], rapid_read64(key, p + 72) ^ see4);
-      see5 = rapid_mix(rapid_read64(key, p + 80) ^ secret[5], rapid_read64(key, p + 88) ^ see5);
-      see6 = rapid_mix(rapid_read64(key, p + 96) ^ secret[6], rapid_read64(key, p + 104) ^ see6);
-      seed = rapid_mix(rapid_read64(key, p + 112) ^ secret[0], rapid_read64(key, p + 120) ^ seed);
-      see1 = rapid_mix(rapid_read64(key, p + 128) ^ secret[1], rapid_read64(key, p + 136) ^ see1);
-      see2 = rapid_mix(rapid_read64(key, p + 144) ^ secret[2], rapid_read64(key, p + 152) ^ see2);
-      see3 = rapid_mix(rapid_read64(key, p + 160) ^ secret[3], rapid_read64(key, p + 168) ^ see3);
-      see4 = rapid_mix(rapid_read64(key, p + 176) ^ secret[4], rapid_read64(key, p + 184) ^ see4);
-      see5 = rapid_mix(rapid_read64(key, p + 192) ^ secret[5], rapid_read64(key, p + 200) ^ see5);
-      see6 = rapid_mix(rapid_read64(key, p + 208) ^ secret[6], rapid_read64(key, p + 216) ^ see6);
-      p += 224;
-      i -= 224;
-    }
+    let see3456: bigint;
 
     if (i >= 112) {
-      seed = rapid_mix(rapid_read64(key, p) ^ secret[0], rapid_read64(key, p + 8) ^ seed);
-      see1 = rapid_mix(rapid_read64(key, p + 16) ^ secret[1], rapid_read64(key, p + 24) ^ see1);
-      see2 = rapid_mix(rapid_read64(key, p + 32) ^ secret[2], rapid_read64(key, p + 40) ^ see2);
-      see3 = rapid_mix(rapid_read64(key, p + 48) ^ secret[3], rapid_read64(key, p + 56) ^ see3);
-      see4 = rapid_mix(rapid_read64(key, p + 64) ^ secret[4], rapid_read64(key, p + 72) ^ see4);
-      see5 = rapid_mix(rapid_read64(key, p + 80) ^ secret[5], rapid_read64(key, p + 88) ^ see5);
-      see6 = rapid_mix(rapid_read64(key, p + 96) ^ secret[6], rapid_read64(key, p + 104) ^ see6);
-      p += 112;
-      i -= 112;
+      let see3 = seed;
+      let see4 = seed;
+      let see5 = seed;
+      let see6 = seed;
+      do {
+        seed = rapid_mix(rapid_read64(key, p) ^ secret[0], rapid_read64(key, p + 8) ^ seed);
+        see1 = rapid_mix(rapid_read64(key, p + 16) ^ secret[1], rapid_read64(key, p + 24) ^ see1);
+        see2 = rapid_mix(rapid_read64(key, p + 32) ^ secret[2], rapid_read64(key, p + 40) ^ see2);
+        see3 = rapid_mix(rapid_read64(key, p + 48) ^ secret[3], rapid_read64(key, p + 56) ^ see3);
+        see4 = rapid_mix(rapid_read64(key, p + 64) ^ secret[4], rapid_read64(key, p + 72) ^ see4);
+        see5 = rapid_mix(rapid_read64(key, p + 80) ^ secret[5], rapid_read64(key, p + 88) ^ see5);
+        see6 = rapid_mix(rapid_read64(key, p + 96) ^ secret[6], rapid_read64(key, p + 104) ^ see6);
+        p += 112;
+        i -= 112;
+      } while (i >= 112);
+
+      see3456 = see3 ^ see4 ^ see5 ^ see6;
+    } else {
+      see3456 = 0n;
     }
 
     if (i >= 48) {
@@ -119,12 +107,7 @@ function rapidhash_v2_internal(
       }
     }
 
-    see3 ^= see4;
-    see5 ^= see6;
-    seed ^= see1;
-    see3 ^= see2;
-    seed ^= see5;
-    seed ^= see3;
+    seed ^= see1 ^ see2 ^ see3456;
 
     if (i > 16) {
       seed = rapid_mix(rapid_read64(key, p) ^ secret[2], rapid_read64(key, p + 8) ^ seed);
