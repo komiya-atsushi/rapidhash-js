@@ -4,6 +4,8 @@ import * as fs from 'node:fs';
 import * as util from 'node:util';
 import source from './rapidhash.c' with {type: 'file'};
 
+const tags: string[] = ['rapidhash_v1.0', 'rapidhash_v2.0', 'rapidhash_v2.2'];
+
 type RapidhashFunc = (message: Buffer, len: number, seed: bigint) => bigint;
 
 function compile(behaviour: 'fast' | 'protected'): [RapidhashFunc, bigint] {
@@ -100,10 +102,12 @@ function generateTestVectors(args: {
   writeStream.end();
 }
 
-function main() {
-  const version = process.argv[2];
+function generate(tag: string): void {
+  const version = tag.replace('rapidhash_', '');
+
   console.log(`Generating test vectors for rapidhash ${version}`);
 
+  child_process.execSync(`git -C src/rapidhash checkout ${tag}`, {stdio: 'inherit'});
   const revision = child_process.execSync("git -C src/rapidhash show --format='%H' --no-patch").toString().trim();
 
   const destinationDir = `generated/${version}`;
@@ -117,6 +121,12 @@ function main() {
 
   generateTestVectors({...options, behaviour: 'fast'});
   generateTestVectors({...options, behaviour: 'protected'});
+}
+
+function main(): void {
+  for (const tag of tags) {
+    generate(tag);
+  }
 }
 
 main();

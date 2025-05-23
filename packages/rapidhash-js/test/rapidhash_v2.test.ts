@@ -1,7 +1,7 @@
 import {describe, expect, test} from 'vitest';
 import {rapidhash_v2, rapidhash_v2_fast, rapidhash_v2_protected} from '../src';
-import * as testVectorsFast from './v2/test_vector_fast';
-import * as testVectorsProtected from './v2/test_vector_protected';
+import * as testVectorsFast from './v2.0/test_vector_fast';
+import * as testVectorsProtected from './v2.0/test_vector_protected';
 
 describe('Basic functionality', () => {
   const message = 'hello';

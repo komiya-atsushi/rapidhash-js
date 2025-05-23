@@ -9,11 +9,8 @@
   },
   "scripts": {
     "clean": "rm -rf src/rapidhash && rm -rf generated/ && mkdir -p generated",
-    "clone:rapidhash": "git clone https://github.com/Nicoshev/rapidhash.git src/rapidhash",
-    "checkout:rapidhash": "git -c advice.detachedHead=false -C src/rapidhash checkout",
-    "generate": "bun run clean && bun run clone:rapidhash && bun run generate:v1 && bun run generate:v2",
-    "generate:v1": "bun run checkout:rapidhash rapidhash_v1.0 && bun run src/index.ts v1",
-    "generate:v2": "bun run checkout:rapidhash rapidhash_v2.0 && bun run src/index.ts v2",
+    "pull:rapidhash": "git -C src/rapidhash pull origin master || git clone https://github.com/Nicoshev/rapidhash.git src/rapidhash",
+    "generate": "bun run pull:rapidhash && bun run src/index.ts",
     "cp": "cp -R generated/ ../rapidhash-js/test"
   },
   "private": true
