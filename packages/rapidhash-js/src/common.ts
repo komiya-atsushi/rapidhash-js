@@ -64,6 +64,15 @@ export function rapid_readSmall(buf: DataView, offset: number, k: number): bigin
   return readSmallView.getBigUint64(0, true);
 }
 
+const readBytesBuffer = new Uint8Array(8);
+const readBytesView = new DataView(readBytesBuffer.buffer);
+
+export function rapid_readBytes(buf: DataView, offset1: number, offset2: number): bigint {
+  readBytesBuffer[0] = buf.getUint8(offset2);
+  readBytesBuffer[7] = buf.getUint8(offset1);
+  return readBytesView.getBigUint64(0, true);
+}
+
 // ---
 
 const textEncoder = new TextEncoder();
@@ -98,6 +107,22 @@ export interface RapidhashOptions {
   seed: bigint;
   rapidMumBehaviour: RapidMumBehaviour;
 }
+
+export const rapidMumImplementations: {
+  [behaviour in RapidMumBehaviour]: {
+    rapid_mix: RapidMix;
+    rapidhash_epilogue: RapidhashEpilogue;
+  };
+} = {
+  fast: {
+    rapid_mix: rapid_mix_fast,
+    rapidhash_epilogue: rapidhash_epilogue_fast,
+  },
+  protected: {
+    rapid_mix: rapid_mix_protected,
+    rapidhash_epilogue: rapidhash_epilogue_protected,
+  },
+};
 
 function isBigUint64(value: bigint): boolean {
   return value >= 0n && value <= 0xffff_ffff_ffff_ffffn;
