@@ -1,4 +1,11 @@
-import {rapidhash_v1_fast, rapidhash_v1_protected, rapidhash_v2_fast, rapidhash_v2_protected} from 'rapidhash-js';
+import {
+  rapidhash_v1_fast,
+  rapidhash_v1_protected,
+  rapidhash_v2_0_fast,
+  rapidhash_v2_0_protected,
+  rapidhash_v2_2_fast,
+  rapidhash_v2_2_protected,
+} from 'rapidhash-js';
 import {HashFunctionBenchmark} from './benchmark-base.js';
 import {showBenchmarkEnvironment} from './benchmark-env.js';
 import {RandomStrings} from './data.js';
@@ -11,40 +18,43 @@ async function main(): Promise<void> {
       minLengthInclusive: 1,
       maxLengthInclusive: 4,
     })
-    .randomDataArgs('1-8 characters', {
+    .randomDataArgs('5-8 characters', {
       numItems: 1024,
-      minLengthInclusive: 1,
+      minLengthInclusive: 5,
       maxLengthInclusive: 8,
     })
-    .randomDataArgs('1-16 characters', {
+    .randomDataArgs('9-16 characters', {
       numItems: 1024,
-      minLengthInclusive: 1,
+      minLengthInclusive: 9,
       maxLengthInclusive: 16,
     })
-    .randomDataArgs('17-56 characters', {
+    .randomDataArgs('17-64 characters', {
       numItems: 1024,
       minLengthInclusive: 17,
-      maxLengthInclusive: 56,
+      maxLengthInclusive: 64,
     })
-    .randomDataArgs('57-128 characters', {
+    .randomDataArgs('65-111 characters', {
       numItems: 1024,
-      minLengthInclusive: 57,
-      maxLengthInclusive: 128,
+      minLengthInclusive: 65,
+      maxLengthInclusive: 111,
     })
-    .randomDataArgs('129-256 characters', {
+    .randomDataArgs('112-256 characters', {
       numItems: 1024,
-      minLengthInclusive: 129,
+      minLengthInclusive: 112,
       maxLengthInclusive: 256,
     })
     .randomDataArgs('1M characters', {
+      warmup: 1000,
       numItems: 4,
       minLengthInclusive: 1024 * 1024,
       maxLengthInclusive: 1024 * 1024,
     })
-    .measurementTarget('rapidhash_v1_fast', (str) => rapidhash_v1_fast(str))
-    .measurementTarget('rapidhash_v1_protected', (str) => rapidhash_v1_protected(str))
-    .measurementTarget('rapidhash_v2_fast', (str) => rapidhash_v2_fast(str))
-    .measurementTarget('rapidhash_v2_protected', (str) => rapidhash_v2_protected(str))
+    .measurementTarget('[v1.0] rapidhash (fast)', (b) => rapidhash_v1_fast(b))
+    .measurementTarget('[v1.0] rapidhash (protected)', (b) => rapidhash_v1_protected(b))
+    .measurementTarget('[v2.0] rapidhash (fast)', (b) => rapidhash_v2_0_fast(b))
+    .measurementTarget('[v2.0] rapidhash (protected)', (b) => rapidhash_v2_0_protected(b))
+    .measurementTarget('[v2.2] rapidhash (fast)', (b) => rapidhash_v2_2_fast(b))
+    .measurementTarget('[v2.2] rapidhash (protected)', (b) => rapidhash_v2_2_protected(b))
     .run();
 
   showBenchmarkEnvironment();

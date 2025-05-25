@@ -1,4 +1,4 @@
-import {do_not_optimize, measure} from 'mitata';
+import {do_not_optimize, k_options, measure} from 'mitata';
 import type {RandomData, RandomDataArgs} from './data.js';
 
 type MeasureResult = Awaited<ReturnType<typeof measure>>;
@@ -38,7 +38,7 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
 
       for (const [functionName, targetFunction] of this._targetFunctions) {
         process.stdout.write(`  Running ${functionName}... `);
-        const measurement = await this.measure(data, targetFunction);
+        const measurement = await this.measure(data, targetFunction, {warmup: args.warmup});
         console.log('done');
 
         result.push({functionName, ...measurement});
@@ -51,7 +51,11 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
     return reports;
   }
 
-  private async measure(data: RandomData<T>, targetFunction: (v: T) => bigint): Promise<MeasureResult> {
+  private async measure(
+    data: RandomData<T>,
+    targetFunction: (v: T) => bigint,
+    options: {warmup?: number},
+  ): Promise<MeasureResult> {
     return await measure(
       function* () {
         yield {
@@ -65,7 +69,7 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
         };
       },
       {
-        warmup_samples: 1000,
+        warmup_samples: options.warmup ?? 1_000_000,
         min_samples: 1004,
         samples_threshold: 1000,
       },

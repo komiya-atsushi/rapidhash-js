@@ -23,6 +23,7 @@ class Xorshift64Star {
 }
 
 export interface RandomDataArgs {
+  warmup?: number;
   numItems: number;
   minLengthInclusive: number;
   maxLengthInclusive: number;
