@@ -19,4 +19,6 @@ jobs:
 
       - run: npm -w packages/rapidhash-js run build
 
+      - run: npm -w packages/benchmark run compile
+
       - run: npm -w packages/benchmark run bench:bytes
