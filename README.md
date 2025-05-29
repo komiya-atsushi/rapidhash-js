@@ -19,7 +19,7 @@ npm install rapidhash-js
 
 ```typescript
 import {
-  // The functions rapidhash, rapidhash_fast, and rapidhash_protected currently implement the v2 algorithm.
+  // The functions rapidhash, rapidhash_fast, and rapidhash_protected currently implement the v2.2 algorithm.
   rapidhash,
   rapidhash_fast,
   rapidhash_protected,
@@ -44,53 +44,72 @@ console.log(rapidhash_protected('hello world'));
 
 ## Benchmark
 
+<details>
+<summary>Apple M3 Max</summary>
+
 ```
 [Benchmark Environment]
   Node.js: v22.15.1
   CPU: Apple M3 Max (16 cores, 2400 MHz)
 
 [1-4 bytes]
-  rapidhash_v1_fast      : 6,158,460.80 ops/s (162.38 ns/iter)
-  rapidhash_v1_protected : 5,238,665.86 ops/s (190.89 ns/iter)
-  rapidhash_v2_fast      : 6,652,432.34 ops/s (150.32 ns/iter)
-  rapidhash_v2_protected : 5,426,323.09 ops/s (184.29 ns/iter)
+  [v1.0] rapidhash (fast)      : 6,285,122.13 ops/s (159.11 ns/iter)
+  [v1.0] rapidhash (protected) : 5,358,496.06 ops/s (186.62 ns/iter)
+  [v2.0] rapidhash (fast)      : 6,751,586.61 ops/s (148.11 ns/iter)
+  [v2.0] rapidhash (protected) : 5,503,585.53 ops/s (181.70 ns/iter)
+  [v2.2] rapidhash (fast)      : 6,713,669.81 ops/s (148.95 ns/iter)
+  [v2.2] rapidhash (protected) : 5,474,441.63 ops/s (182.67 ns/iter)
 
-[1-8 bytes]
-  rapidhash_v1_fast      : 5,734,137.37 ops/s (174.39 ns/iter)
-  rapidhash_v1_protected : 5,110,619.92 ops/s (195.67 ns/iter)
-  rapidhash_v2_fast      : 5,928,919.83 ops/s (168.66 ns/iter)
-  rapidhash_v2_protected : 5,263,867.11 ops/s (189.97 ns/iter)
+[5-8 bytes]
+  [v1.0] rapidhash (fast)      : 5,995,195.47 ops/s (166.80 ns/iter)
+  [v1.0] rapidhash (protected) : 5,129,620.76 ops/s (194.95 ns/iter)
+  [v2.0] rapidhash (fast)      : 6,217,065.60 ops/s (160.85 ns/iter)
+  [v2.0] rapidhash (protected) : 5,326,035.89 ops/s (187.76 ns/iter)
+  [v2.2] rapidhash (fast)      : 6,050,308.59 ops/s (165.28 ns/iter)
+  [v2.2] rapidhash (protected) : 5,344,429.93 ops/s (187.11 ns/iter)
 
-[1-16 bytes]
-  rapidhash_v1_fast      : 5,655,101.18 ops/s (176.83 ns/iter)
-  rapidhash_v1_protected : 5,096,905.96 ops/s (196.20 ns/iter)
-  rapidhash_v2_fast      : 5,861,882.39 ops/s (170.59 ns/iter)
-  rapidhash_v2_protected : 5,210,155.86 ops/s (191.93 ns/iter)
+[9-16 bytes]
+  [v1.0] rapidhash (fast)      : 5,986,726.82 ops/s (167.04 ns/iter)
+  [v1.0] rapidhash (protected) : 5,154,979.68 ops/s (193.99 ns/iter)
+  [v2.0] rapidhash (fast)      : 6,131,914.48 ops/s (163.08 ns/iter)
+  [v2.0] rapidhash (protected) : 5,321,633.57 ops/s (187.91 ns/iter)
+  [v2.2] rapidhash (fast)      : 6,247,440.63 ops/s (160.07 ns/iter)
+  [v2.2] rapidhash (protected) : 5,351,510.81 ops/s (186.86 ns/iter)
 
-[17-56 bytes]
-  rapidhash_v1_fast      : 3,769,517.21 ops/s (265.29 ns/iter)
-  rapidhash_v1_protected : 3,342,290.50 ops/s (299.20 ns/iter)
-  rapidhash_v2_fast      : 3,982,046.12 ops/s (251.13 ns/iter)
-  rapidhash_v2_protected : 3,515,249.93 ops/s (284.47 ns/iter)
+[17-64 bytes]
+  [v1.0] rapidhash (fast)      : 3,843,646.47 ops/s (260.17 ns/iter)
+  [v1.0] rapidhash (protected) : 3,312,988.79 ops/s (301.84 ns/iter)
+  [v2.0] rapidhash (fast)      : 3,947,650.45 ops/s (253.32 ns/iter)
+  [v2.0] rapidhash (protected) : 3,390,062.69 ops/s (294.98 ns/iter)
+  [v2.2] rapidhash (fast)      : 4,039,784.70 ops/s (247.54 ns/iter)
+  [v2.2] rapidhash (protected) : 3,400,339.38 ops/s (294.09 ns/iter)
 
-[57-128 bytes]
-  rapidhash_v1_fast      : 2,260,312.89 ops/s (442.42 ns/iter)
-  rapidhash_v1_protected : 2,048,074.92 ops/s (488.26 ns/iter)
-  rapidhash_v2_fast      : 2,161,841.53 ops/s (462.57 ns/iter)
-  rapidhash_v2_protected : 2,005,979.52 ops/s (498.51 ns/iter)
+[65-111 bytes]
+  [v1.0] rapidhash (fast)      : 2,539,382.14 ops/s (393.80 ns/iter)
+  [v1.0] rapidhash (protected) : 2,156,257.28 ops/s (463.77 ns/iter)
+  [v2.0] rapidhash (fast)      : 2,580,829.71 ops/s (387.47 ns/iter)
+  [v2.0] rapidhash (protected) : 2,186,335.35 ops/s (457.39 ns/iter)
+  [v2.2] rapidhash (fast)      : 2,545,090.54 ops/s (392.91 ns/iter)
+  [v2.2] rapidhash (protected) : 2,189,080.78 ops/s (456.81 ns/iter)
 
-[129-256 bytes]
-  rapidhash_v1_fast      : 1,291,980.54 ops/s (774.01 ns/iter)
-  rapidhash_v1_protected : 1,201,241.40 ops/s (832.47 ns/iter)
-  rapidhash_v2_fast      : 1,274,486.99 ops/s (784.63 ns/iter)
-  rapidhash_v2_protected : 1,200,791.35 ops/s (832.78 ns/iter)
+[112-256 bytes]
+  [v1.0] rapidhash (fast)      : 1,518,423.71 ops/s (658.58 ns/iter)
+  [v1.0] rapidhash (protected) : 1,274,445.41 ops/s (784.66 ns/iter)
+  [v2.0] rapidhash (fast)      : 1,484,277.31 ops/s (673.73 ns/iter)
+  [v2.0] rapidhash (protected) : 1,258,892.94 ops/s (794.35 ns/iter)
+  [v2.2] rapidhash (fast)      : 1,525,211.09 ops/s (655.65 ns/iter)
+  [v2.2] rapidhash (protected) : 1,293,585.65 ops/s (773.05 ns/iter)
 
 [1M bytes]
-  rapidhash_v1_fast      : 308.34 ops/s (3.24 ms/iter)
-  rapidhash_v1_protected : 291.73 ops/s (3.43 ms/iter)
-  rapidhash_v2_fast      : 309.57 ops/s (3.23 ms/iter)
-  rapidhash_v2_protected : 291.12 ops/s (3.43 ms/iter)
+  [v1.0] rapidhash (fast)      : 356.49 ops/s (2.81 ms/iter)
+  [v1.0] rapidhash (protected) : 296.16 ops/s (3.38 ms/iter)
+  [v2.0] rapidhash (fast)      : 375.05 ops/s (2.67 ms/iter)
+  [v2.0] rapidhash (protected) : 309.03 ops/s (3.24 ms/iter)
+  [v2.2] rapidhash (fast)      : 374.26 ops/s (2.67 ms/iter)
+  [v2.2] rapidhash (protected) : 309.25 ops/s (3.23 ms/iter)
 ```
+
+</details>
 
 ## License
 
