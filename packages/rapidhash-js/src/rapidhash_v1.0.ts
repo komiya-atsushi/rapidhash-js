@@ -1,8 +1,7 @@
 import {
-  type RapidMix,
   type RapidhashEpilogue,
   type RapidhashOptions,
-  rapidMumImplementations,
+  type RapidMix,
   rapid_mix_fast,
   rapid_mix_protected,
   rapid_read32x2,
@@ -10,6 +9,7 @@ import {
   rapid_readSmall,
   rapidhash_epilogue_fast,
   rapidhash_epilogue_protected,
+  rapidMumImplementations,
   toDataView,
   validateOptions,
 } from './common';
