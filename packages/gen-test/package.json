@@ -7,6 +7,9 @@
   "dependencies": {
     "bun": "^1.2.23"
   },
+  "devDependencies": {
+    "@types/bun": "^1.2.23"
+  },
   "scripts": {
     "clean": "rm -rf src/rapidhash && rm -rf generated/ && mkdir -p generated",
     "pull:rapidhash": "git -C src/rapidhash pull origin master || git clone https://github.com/Nicoshev/rapidhash.git src/rapidhash",
