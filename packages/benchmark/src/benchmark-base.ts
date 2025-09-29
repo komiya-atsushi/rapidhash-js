@@ -1,4 +1,4 @@
-import {do_not_optimize, k_options, measure} from 'mitata';
+import {do_not_optimize, measure} from 'mitata';
 import type {RandomData, RandomDataArgs} from './data.js';
 
 type MeasureResult = Awaited<ReturnType<typeof measure>>;
@@ -59,7 +59,7 @@ export class HashFunctionBenchmark<T extends string | Uint8Array> {
     return await measure(
       function* () {
         yield {
-          [0](): T {
+          0(): T {
             return data.next();
           },
 
