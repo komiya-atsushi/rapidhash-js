@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**", "!**/test_vector_fast.ts", "!**/test_vector_protected.ts"]
+    "includes": ["**", "!packages/rapidhash-js/test/test-vectors"]
   },
   "formatter": {
     "enabled": true,

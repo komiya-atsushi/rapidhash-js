@@ -1,131 +1,137 @@
-import {cc, ptr} from 'bun:ffi';
-import * as child_process from 'node:child_process';
 import * as fs from 'node:fs';
-import * as util from 'node:util';
-import source from './rapidhash.c' with {type: 'file'};
+import * as Bun from 'bun';
+import {compile} from './compiler';
+import {rapidhashGitRepo} from './git';
+import {type InputMessage, inputMessages} from './input-message';
+import type {Behaviour, FunctionName, RapidhashFunction} from './types';
+import {TestVectorWriter} from './writer';
 
-const tags: string[] = ['rapidhash_v1.0', 'rapidhash_v2.0', 'rapidhash_v2.2'];
-
-type RapidhashFunc = (message: Buffer, len: number, seed: bigint) => bigint;
-
-function compile(behaviour: 'fast' | 'protected'): [RapidhashFunc, bigint] {
-  const result = cc({
-    source,
-    symbols: {
-      _rapidhash_withSeed: {
-        args: ['ptr', 'u32', 'u64'],
-        returns: 'u64',
-      },
-      default_seed: {
-        args: [],
-        returns: 'u64',
-      },
-    },
-    define: behaviour === 'fast' ? {} : {RAPIDHASH_PROTECTED: '1'},
-  });
-
-  const rapidhash: RapidhashFunc = (message, len, seed) => result.symbols._rapidhash_withSeed(ptr(message), len, seed);
-
-  return [rapidhash, result.symbols.default_seed()];
+interface RapidhashVersion {
+  tag: string;
+  version: string;
+  source: string;
+  functionNames: FunctionName[];
 }
 
-function generateTestVectors1(rapidhash: RapidhashFunc, seeds: bigint[]): (readonly [string, bigint, bigint])[] {
-  const testMessages = [
-    '',
-    'a',
-    'AB',
-    '123',
-    '¶', // 2 bytes in UTF-8
-    'あ', // 3 bytes in UTF-8
-    'Hello, world.',
-    'こんにちは、世界。',
-  ];
+const versions: RapidhashVersion[] = [
+  {
+    tag: 'rapidhash_v1.0',
+    version: 'v1.0',
+    source: 'src/rapidhash.c',
+    functionNames: ['rapidhash'],
+  },
+  {
+    tag: 'rapidhash_v2.0',
+    version: 'v2.0',
+    source: 'src/rapidhash.c',
+    functionNames: ['rapidhash'],
+  },
+  {
+    tag: 'rapidhash_v2.2',
+    version: 'v2.2',
+    source: 'src/rapidhash.c',
+    functionNames: ['rapidhash'],
+  },
+];
 
+// ---
+
+function generateShortInputTestVectors(rapidhash: RapidhashFunction, seeds: bigint[], shortMessages: InputMessage[]) {
   return seeds.flatMap((seed) =>
-    testMessages
-      .map((message) => [message, Buffer.from(message)] as const)
-      .map(([message, buf]) => [message, seed, rapidhash(buf, buf.length, seed)] as const),
+    shortMessages.map((message) => [message.message, seed, rapidhash(message.buffer, message.length, seed)] as const),
   );
 }
 
-function generateTestVectors2(rapidhash: RapidhashFunc, seeds: bigint[]) {
-  const _testLongMessage =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-  const testLongMessage = _testLongMessage.repeat(Math.ceil((2 ** 13 + 1) / _testLongMessage.length));
-  const buffer = Buffer.from(testLongMessage);
+function generateLongInputTestVectors(rapidhash: RapidhashFunction, seeds: bigint[], longInputMessage: InputMessage) {
   const result: (readonly [number, bigint, bigint])[] = [];
 
-  for (let i = 1; i < buffer.length; i++) {
+  for (let i = 1; i < longInputMessage.length; i++) {
     if (i % 10000 === 0) {
-      console.log(`${i} / ${buffer.length}`);
+      console.log(`${i} / ${longInputMessage.length}`);
     }
 
-    result.push(...seeds.map((seed) => [i, seed, rapidhash(buffer, i, seed)] as const));
+    result.push(...seeds.map((seed) => [i, seed, rapidhash(longInputMessage.buffer, i, seed)] as const));
   }
 
-  return {longMessage: testLongMessage, testVectors: result};
+  return result;
 }
 
 function generateTestVectors(args: {
-  behaviour: 'fast' | 'protected';
   version: string;
+  behaviour: Behaviour;
+  tag: string;
   revision: string;
+  source: Bun.BunFile;
   destinationDir: string;
+  functionName: FunctionName;
 }): void {
-  const {behaviour, version, revision, destinationDir} = args;
+  const {version, behaviour, tag, revision, source, functionName, destinationDir} = args;
 
-  const [rapidhash, defaultSeed] = compile(behaviour);
+  const {defaultSeed, rapidhashWithSeed} = compile({source, behaviour, functionName});
 
-  const seeds: bigint[] = [defaultSeed, 0n, 0x0123456789abcdefn, 0xfedcba9876543210n];
+  const v1DefaultSeed = 0xbdd89aa982704029n;
+  const seeds: bigint[] = [defaultSeed, defaultSeed ^ v1DefaultSeed, 0x0123456789abcdefn, 0xfedcba9876543210n];
 
-  const testVectors1 = generateTestVectors1(rapidhash, seeds);
+  const writer = new TestVectorWriter({
+    destinationDir,
+    version,
+    functionName,
+    behaviour,
+    tag,
+    revision,
+  });
 
-  const {longMessage, testVectors: testVectors2} = generateTestVectors2(rapidhash, [defaultSeed]);
+  const shortTestVectors = generateShortInputTestVectors(rapidhashWithSeed, seeds, inputMessages.shortMessages);
+  const longTestVectors = generateLongInputTestVectors(rapidhashWithSeed, [defaultSeed], inputMessages.longMessage);
 
-  const writeStream = fs.createWriteStream(`${destinationDir}/test_vector_${behaviour}.ts`);
-
-  writeStream.write('// This file is generated by packages/gen-test/\n');
-  writeStream.write(`// Rapidhash ${version} (revision: ${revision})\n`);
-
-  writeStream.write('export const testVectors1: [string, bigint, bigint][] = ');
-  writeStream.write(util.inspect(testVectors1, {depth: null, maxArrayLength: Number.POSITIVE_INFINITY}));
-  writeStream.write(';\n\n');
-
-  writeStream.write("export const longMessage = '");
-  writeStream.write(longMessage);
-  writeStream.write("';\n\n");
-
-  writeStream.write('export const testVectors2: [number, bigint, bigint][] = ');
-  writeStream.write(util.inspect(testVectors2, {depth: null, maxArrayLength: Number.POSITIVE_INFINITY}));
-  writeStream.write(';\n');
-
-  writeStream.end();
+  try {
+    writer.createFile();
+    writer.writeTestVectors({
+      short: {
+        testVectors: shortTestVectors,
+      },
+      long: {
+        message: inputMessages.longMessage.message,
+        repetitions: inputMessages.longMessage.repetitions,
+        testVectors: longTestVectors,
+      },
+    });
+  } finally {
+    writer.close();
+  }
 }
 
-function generate(tag: string): void {
-  const version = tag.replace('rapidhash_', '');
+function generate(rapidhashVersion: RapidhashVersion): void {
+  const {tag, version, source, functionNames} = rapidhashVersion;
 
   console.log(`Generating test vectors for rapidhash ${version}`);
 
-  child_process.execSync(`git -C src/rapidhash checkout ${tag}`, {stdio: 'inherit'});
-  const revision = child_process.execSync("git -C src/rapidhash show --format='%H' --no-patch").toString().trim();
+  const revision = rapidhashGitRepo.checkout(tag);
 
   const destinationDir = `generated/${version}`;
+  fs.rmSync(destinationDir, {recursive: true, force: true});
   fs.mkdirSync(destinationDir, {recursive: true});
 
-  const options = {
-    version,
-    revision,
-    destinationDir,
-  };
+  for (const functionName of functionNames) {
+    const options = {
+      version,
+      tag,
+      revision,
+      source: Bun.file(source),
+      destinationDir,
+      functionName,
+    };
 
-  generateTestVectors({...options, behaviour: 'fast'});
-  generateTestVectors({...options, behaviour: 'protected'});
+    generateTestVectors({...options, behaviour: 'fast'});
+    generateTestVectors({...options, behaviour: 'protected'});
+  }
 }
 
 function main(): void {
-  for (const tag of tags) {
-    generate(tag);
+  rapidhashGitRepo.pullOrClone();
+
+  for (const v of versions) {
+    generate(v);
   }
 }
 

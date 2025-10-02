@@ -12,9 +12,8 @@
   },
   "scripts": {
     "clean": "rm -rf src/rapidhash && rm -rf generated/ && mkdir -p generated",
-    "pull:rapidhash": "git -C src/rapidhash pull origin master || git clone https://github.com/Nicoshev/rapidhash.git src/rapidhash",
-    "generate": "bun run pull:rapidhash && bun run src/index.ts",
-    "cp": "cp -R generated/ ../rapidhash-js/test"
+    "generate": "bun run src/index.ts",
+    "cp": "rm -rf ../rapidhash-js/test/test-vectors && mkdir -p ../rapidhash-js/test/test-vectors && cp -R generated/ ../rapidhash-js/test/test-vectors"
   },
   "private": true
 }
