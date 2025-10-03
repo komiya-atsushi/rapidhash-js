@@ -32,6 +32,12 @@ const versions: RapidhashVersion[] = [
     source: 'src/rapidhash.c',
     functionNames: ['rapidhash'],
   },
+  {
+    tag: 'rapidhash_v3',
+    version: 'v3.0',
+    source: 'src/rapidhash_v3.c',
+    functionNames: ['rapidhash', 'rapidhashMicro', 'rapidhashNano'],
+  },
 ];
 
 // ---
