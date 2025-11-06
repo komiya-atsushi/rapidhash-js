@@ -1,4 +1,5 @@
 const {rapidhash, rapidhash_v1, rapidhash_v2_2} = require('rapidhash-js');
+const child_process = require('node:child_process');
 
 test("rapidhash('hello') = rapidhash_v2_2('hello')", () => {
   expect(rapidhash('hello')).toEqual(rapidhash_v2_2('hello'));
@@ -17,13 +18,10 @@ test('CommonJS module (lib/index.js) should be loaded', () => {
 });
 
 test('Source map should be applied in error stack trace', () => {
-  const result = (() => {
-    try {
-      rapidhash('hello', {seed: 1n << 64n});
-    } catch (e) {
-      return e.stack.split('\n').find((line) => line.includes('validateOptions'));
-    }
-  })();
+  const result = child_process.spawnSync('node', ['--enable-source-maps', 'src/rapidhash-throws-error.js'], {
+    encoding: 'utf-8',
+  });
 
-  expect(result).toMatch(/common\.ts:\d+:\d+/);
+  const stackTraceLine = result.stderr?.split('\n').find((line) => line.includes('validateOptions'));
+  expect(stackTraceLine).toMatch(/common\.ts:\d+:\d+/);
 });
