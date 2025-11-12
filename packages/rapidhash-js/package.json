@@ -22,24 +22,33 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsup src/index.ts",
+    "build": "tsup",
     "test": "npm run test:jest && npm run test:attw",
     "test:jest": "vitest --run",
-    "test:attw": "attw --pack .",
+    "test:attw": "attw --profile node16 --format table-flipped --pack .",
     "pretest": "npm run build"
   },
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "exports": {
     ".": {
-      "require": {
-        "types": "./lib/index.d.ts",
-        "default": "./lib/index.js"
-      },
-      "import": {
-        "types": "./lib/index.d.mts",
-        "default": "./lib/index.mjs"
-      }
+      "import": "./lib/index.mjs",
+      "default": "./lib/index.js"
+    },
+    "./v1.0": {
+      "import": "./lib/v1.0/index.mjs",
+      "default": "./lib/v1.0/index.js"
+    },
+    "./v2.0": {
+      "import": "./lib/v2.0/index.mjs",
+      "default": "./lib/v2.0/index.js"
+    },
+    "./v2.2": {
+      "import": "./lib/v2.2/index.mjs",
+      "default": "./lib/v2.2/index.js"
+    },
+    "./v3.0": {
+      "import": "./lib/v3.0/index.mjs",
+      "default": "./lib/v3.0/index.js"
     }
   },
   "files": [

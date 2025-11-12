@@ -12,8 +12,8 @@ import {
   rapidMumImplementations,
   toDataView,
   validateOptions,
-} from './common';
-import {RAPID_SEED, type RapidSecret, rapid_secret} from './common_v2';
+} from '../common';
+import {RAPID_SEED, type RapidSecret, rapid_secret} from '../common_v2';
 
 // ---
 
