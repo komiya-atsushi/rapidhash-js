@@ -9,6 +9,7 @@
     "rapidhash-js": "../rapidhash-js"
   },
   "scripts": {
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "pretest": "tsc --noEmit"
   }
 }
