@@ -1,8 +1,10 @@
-import {rapidhash, rapidhash_v1, rapidhash_v2_2} from 'rapidhash-js';
+import {rapidhash} from 'rapidhash-js';
+import {rapidhash as rapidhash_v1} from 'rapidhash-js/v1.0';
+import {rapidhash as rapidhash_v2_2} from 'rapidhash-js/v2.2';
 import {expect, test} from 'vitest';
 
-test("rapidhash('hello') = rapidhash_v2_2('hello')", () => {
-  expect(rapidhash('hello')).toEqual(rapidhash_v2_2('hello'));
+test("rapidhash('hello') = 3327445792987248966n (v3.0)", () => {
+  expect(rapidhash('hello')).toEqual(3327445792987248966n);
 });
 
 test("rapidhash_v1('hello') = 2188375479838694330n", () => {
