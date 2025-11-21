@@ -19,27 +19,46 @@ npm install rapidhash-js
 
 ```typescript
 import {
-  // The functions rapidhash, rapidhash_fast, and rapidhash_protected currently implement the v2.2 algorithm.
+  // These functions currently use the v3.0 implementation.
   rapidhash,
   rapidhash_fast,
   rapidhash_protected,
-  // To use the old v1 algorithm, import rapidhash_v1 (or rapidhash_v1_fast, rapidhash_v1_protected) instead.
-  rapidhash_v1,
+  // rapidhashMicro and rapidhashNano are additional variants in v3.0
+  rapidhashMicro,
+  rapidhashNano,
 } from 'rapidhash-js';
 
 // rapidhash() returns a 64-bit hash value represented as bigint.
-console.log(rapidhash('hello world'));  // Output: 1722744455612372674n
+console.log(rapidhash('hello world'));
 
 // You can specify a 64-bit seed value with the 'seed' option.
-console.log(rapidhash('hello world', {seed: 0x0123_4567_89AB_CDEFn}));  // Output: 13409940373860458135n
+console.log(rapidhash('hello world', {seed: 0x0123_4567_89AB_CDEFn}));
 
-// You can specify the behavior of the rapid_mum() function
-// with the rapidMumBehaviour option (default is 'fast').
-console.log(rapidhash('hello world', {rapidMumBehaviour: 'protected'}));  // Output: 12365338091610779222n
+// You can control rapid_mum() behavior with the rapidMumBehaviour option (default: 'fast').
+console.log(rapidhash('hello world', {rapidMumBehaviour: 'protected'}));
 
 // Instead of specifying the rapidMumBehaviour option,
 // you can call rapidhash_fast() or rapidhash_protected().
 console.log(rapidhash_protected('hello world'));
+
+// rapidhashMicro and rapidhashNano are optimized variants with smaller loop blocks
+console.log(rapidhashMicro('hello world'));
+console.log(rapidhashNano('hello world'));
+```
+
+### Using older versions
+
+To use older versions of the algorithm, import from version-specific entry points:
+
+```typescript
+// v2.2
+import { rapidhash, rapidhash_fast, rapidhash_protected } from 'rapidhash-js/v2.2';
+
+// v2.0
+import { rapidhash, rapidhash_fast, rapidhash_protected } from 'rapidhash-js/v2.0';
+
+// v1.0
+import { rapidhash, rapidhash_fast, rapidhash_protected } from 'rapidhash-js/v1.0';
 ```
 
 ## Benchmark
