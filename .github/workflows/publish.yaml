@@ -20,17 +20,15 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6.0.0
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Verify npmjs access token (this step will fail if the token has expired)
-        run: npm whoami
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Update npm (Ensure npm 11.5.1 or later is installed)
+        run: npm install -g npm@latest
 
       - name: Configure git
         run: |
@@ -65,10 +63,12 @@ jobs:
 
       - name: Publish
         run: npm -w packages/rapidhash-js publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Push commits and tag
         run: |
           git push
           git push origin "v${{ steps.get-version-string.outputs.version }}"
+
+  purge-camo-cache:
+    needs: publish
+    uses: ./.github/workflows/purge-camo-cache.yaml

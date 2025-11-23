@@ -1,0 +1,15 @@
+name: Purge camo cache
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  purge-camo-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge images from camo.githubusercontent.com
+        shell: bash
+        run: |
+          urls=$(curl -sLk "https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/tree/main" | grep -Eo "(http|https)://camo.githubusercontent.com[a-zA-Z0-9./?=_%:-]*")
+          while IFS= read -r url; do curl -X PURGE "$url"; done <<< "$urls"
