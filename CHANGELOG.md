@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [3.0.0] - 2025-11-24
 
 - Implement [rapidhash v3.0](https://github.com/Nicoshev/rapidhash).
 - Add `rapidhashMicro` and `rapidhashNano` variants (v3.0 only).
