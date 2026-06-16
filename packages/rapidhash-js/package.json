@@ -22,7 +22,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "test": "npm run test:jest && npm run test:attw",
     "test:jest": "vitest --run",
     "test:attw": "attw --profile node16 --format table-flipped --pack .",

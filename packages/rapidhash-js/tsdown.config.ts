@@ -1,0 +1,11 @@
+import {defineConfig} from 'tsdown';
+
+export default defineConfig({
+  entry: ['src/index.ts', 'src/v1.0/index.ts', 'src/v2.0/index.ts', 'src/v2.2/index.ts', 'src/v3.0/index.ts'],
+  format: ['cjs', 'esm'],
+  dts: true,
+  sourcemap: true,
+  outDir: 'lib',
+  fixedExtension: false,
+  hash: false,
+});
