@@ -10,6 +10,9 @@ jobs:
     steps:
       - name: Purge images from camo.githubusercontent.com
         shell: bash
+        env:
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          urls=$(curl -sLk "https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/tree/main" | grep -Eo "(http|https)://camo.githubusercontent.com[a-zA-Z0-9./?=_%:-]*")
+          urls=$(curl -sLk "https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/main" | grep -Eo "(http|https)://camo.githubusercontent.com[a-zA-Z0-9./?=_%:-]*")
           while IFS= read -r url; do curl -X PURGE "$url"; done <<< "$urls"
