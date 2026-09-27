@@ -23,10 +23,9 @@
   },
   "scripts": {
     "build": "tsdown",
-    "test": "npm run test:jest && npm run test:attw",
+    "test": "npm run build && npm run test:jest && npm run test:attw",
     "test:jest": "vitest --run",
-    "test:attw": "attw --profile node16 --format table-flipped --pack .",
-    "pretest": "npm run build"
+    "test:attw": "attw --profile node16 --format table-flipped --pack ."
   },
   "main": "lib/index.js",
   "exports": {
