@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.1] - 2026-11-16
+
+- Export `rapidhashMicro` and `rapidhashNano` (and their `_fast` / `_protected` functions) from the package root. The README documented importing them from `rapidhash-js`, but they were only available from `rapidhash-js/v3.0` ([#4](https://github.com/komiya-atsushi/rapidhash-js/issues/4)).
+
 ## [3.0.0] - 2025-11-24
 
 - Implement [rapidhash v3.0](https://github.com/Nicoshev/rapidhash).
